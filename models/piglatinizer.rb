@@ -1,0 +1,61 @@
+
+class PigLatinizer
+  # def initialize(params={})
+  #   @str = :str.downcase
+  # end
+  def piglatinize(str)
+    # str = str.downcase
+    puts "str: #{str}"
+    vowels = ['a', 'e', 'i', 'o', 'u']
+    up_vowels = ['A','E','I','O','U']
+    words = str.split(' ')
+    result = []
+
+    words.each_with_index do |word, i|
+    translation = ''
+    qu = false
+    if (vowels.include? word[0]) ||(up_vowels.include? word[0])
+        translation = word + 'way'
+        # puts "word: #{word}"
+        # puts "translation #{translation}"
+      result.push(translation)
+
+    else
+        word = word.split('')
+        count = 0
+        word.each_with_index do |char, index|
+            if vowels.include? char
+                # handle words that start with 'qu'
+                if char == 'u' and translation[-1] == 'q'
+                    qu = true
+                    translation = words[i][count + 1..words[i].length] + translation + 'uay'
+                    result.push(translation)
+                    next
+                end
+                break
+            else
+                # handle words with 'qu' in middle
+                if char == 'q' and word[i+1] == 'u'
+                    qu = true
+                    translation = words[i][count + 2..words[i].length] + 'quay'
+                    result.push(translation)
+                    next
+                else
+                    translation += char
+                end
+                count += 1
+            end
+        end
+        # translation of consonant words without qu
+        if not qu
+          # puts 'not qu'
+            translation = words[i][count..words[i].length] + translation + 'ay'
+            result.push(translation)
+        end
+    end
+
+    end
+    result.join(' ')
+    end
+
+end
